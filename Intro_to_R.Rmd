@@ -1,0 +1,65 @@
+---
+title: "Intro to R"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Se puede usar R como calculador:
+```{r}
+3 + 5
+```
+
+Se puede guardar este resultado para usar más adelante:
+```{r}
+altura <- 3+5 # hablar del operador de asignación
+            # atajo de teclado: alt + - // option + -
+altura
+```
+Se puede construir objetos con distintos contenidos:
+```{r}
+base <- 25
+letra <- "a" # hablar de nombres posibles (buenas prácticas)
+             # nombres reservados (for, if, else, etc)
+```
+
+Diferencia entre objetos y variables: acá sinónimos, pero no siempre.
+
+Podemos hacer cálculos con objetos:
+```{r}
+area <- base * altura
+
+# cambio el valor de base
+base <- 30 # ¿qué pasará con "area"? si no lo vuelvo a correr, nada
+```
+
+Comentarios: numeral # , command+shift+c para comentar una línea o seleccionar
+
+Ejercicio??
+
+Funciones y argumentos:
+* códigos predefinidos para usar en secuencias más complejas (permite automatizar)
+* algunas nativas de R, otras definidas por usuario, otras importadas de paquetes
+* tienen argumentos y devuelven valores
+
+Ejemplo: raiz cuadrada
+```{r}
+sqrt(9549058)
+sqrt(area)
+raiz <- sqrt(area) # muchos valores distintos, conjuntos de datos, datasets, etc
+```
+
+Distintos argumentos (chequear documentación)
+Argumentos obligatorios, otros definidos por default
+
+Ejemplo: redondeo
+```{r}
+round(raiz) # por default, redondea a dígitos enteros
+?round
+args(round)
+round(raiz, digits = 2)
+round(raiz, 2) # orden predefinido, no necesito definir argumentos
+round(digits = 2, raiz) # invierto orden, defino argumentos
+```
+
+Ejercicio??
