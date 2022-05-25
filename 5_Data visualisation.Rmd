@@ -1,0 +1,99 @@
+---
+title: "5_Data visualisation"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+# transformación previa (Dependencias)
+interviews_plotting <- entrevistas %>%
+  ## pivot wider by items_owned
+  separate_rows(items_owned, sep = ";") %>%
+  ## if there were no items listed, changing NA to no_listed_items
+  replace_na(list(items_owned = "no_listed_items")) %>%
+  mutate(items_owned_logical = TRUE) %>%
+  pivot_wider(names_from = items_owned,
+              values_from = items_owned_logical,
+              values_fill = list(items_owned_logical = FALSE)) %>%
+  ## pivot wider by months_lack_food
+  separate_rows(months_lack_food, sep = ";") %>%
+  mutate(months_lack_food_logical = TRUE) %>%
+  pivot_wider(names_from = months_lack_food,
+              values_from = months_lack_food_logical,
+              values_fill = list(months_lack_food_logical = FALSE)) %>%
+  ## add some summary columns
+  mutate(number_months_lack_food = rowSums(select(., Jan:May))) %>%
+  mutate(number_items = rowSums(select(., bicycle:car)))
+
+write_csv (interviews_plotting, file = "data_output/interviews_plotting.csv")
+```
+
+
+vamos a usar el paquete ggplot2 que está en tidyverse:
+```{r}
+library(tidyverse)
+interviews_plotting <- read_csv("data_output/interviews_plotting.csv")
+```
+
+ggplot2 aporta una interfaz para especificar las variables, la forma de presentarlas y las propiedades visuales
+este trabajo en capas permite que sea fácil mutar de un tipo de gráfico a otro
+trabaja mejor con datos en formato long (una columna por cada dimensión y una fila por cada observación)
+
+cada gráfico debe aportar:
+* datos
+* mapeo de la estética (descripción de cómo las variables se mapean a los atributos gráficos y los atributos visuales de los datos, como el eje y y el x, el color, el relleno, la forma y la transparencia)
+* objetos geométricos (geoms), básicamente tipo de gráfico
+
+entonces, la plantilla para el código sería esta:
+
+DATA %>% 
+  ggplot(aes(MAPPINGS)) +
+  GEOM_FUNCTION()
+  
+ejemplo:
+```{r}
+interviews_plotting %>% # data
+  ggplot(aes(x = no_membrs, y = number_items))+ # define el mapeo con las variables, la estética
+  geom_point() # tipo de gráfico
+
+# el paquete ggplot usa + en lugar de pipes, ojo
+```
+algunas cuestiones importantes:
+* todo lo que vaya dentro de la funcion ggplot() puede ser accedido por cualqquier capa de geom
+* podés dar mappings específicos para cada geom
+* el signo + hay que ponerlo siempre al final de la linea
+
+# Construir gráficos de forma interactiva
+
+si miramos el gráfico anterior vemos que hay menos puntos que filas de observciones y que todos los puntos parecen estar en la intersección de las variables. 
+parecería ser que hay observaciones superpuestas
+se puede resolver: 1) cambiando transparencia, 2) agregando movimiento/temblor a los puntos (jittering)
+
+opción 1:
+argumento alpha, que va de 0 a 1.
+```{r}
+interviews_plotting %>%
+    ggplot(aes(x = no_membrs, y = number_items)) +
+    geom_point(alpha = 0.5)
+```
+opción 2:
+```{r}
+interviews_plotting %>%
+    ggplot(aes(x = no_membrs, y = number_items)) +
+    geom_jitter()
+
+# podemos especificar la cantidad de movimiento y el color
+# geom_jitter(alpha = 0.5,
+#                 color = "blue",
+                # width = 0.2,
+                # height = 0.2)
+```
+
+si quiero asignar distintos colores:
+```{r}
+interviews_plotting %>%
+    ggplot(aes(x = no_membrs, y = number_items, color = village)) +
+    geom_jitter(alpha = 0.5, width = 0.2, height = 0.2)
+```
+

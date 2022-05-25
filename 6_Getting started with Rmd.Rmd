@@ -1,0 +1,30 @@
+---
+title: "Getting started with R Markdown"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+¿qué es?
+* tipo de documento que combina código ejecutable y sus resultados, con texto legible
+* puede ser convertido a otros formatos como PDF, Word o HTML
+* favorece la reproducibilidad
+* el paquete rmarkdown viene pre-instalado con rstudio
+
+como crear uno:
+file > new file > rmarkdow
+
+Componentes básicos:
+
+código YAML:
+
+sintaxis:
+jerarquía de títulos
+negritas, itálicas
+`encuadre de código`
+punteos con  - y listas con 1.
+ + nesteadas con +
+ 
+Code chunk: 
+pc control + alt + i
+mac cmd + option + i

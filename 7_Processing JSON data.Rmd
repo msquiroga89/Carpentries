@@ -1,0 +1,45 @@
+---
+title: "7 Processing JSON data"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+JSON: formato de data para permitir que distintas máquinas o o procesos dentro de máquinas se comuniquen enviando mensajes con un formato particular.
+es el formato de data preferido por los API (application programming interfaces)
+es un formato legible por humanos y puede ser mapeado a un df
+el archivo que vamos a usar contiene el resultado de encuestas
+
+ventajas de json: 
+* formato popular, 
+* legible, 
+* cada registro se contiene a sí mismo
+* no todos los documentos tienen la misma estructura dentro del mismo archivo
+* las estructuras de los documentos pueden ser complejas y estar anidadas
+
+desventajas:
+* más verboso que csv
+* difícil de procesar y mostrar
+
+paquete json:
+```{r}
+library(jsonlite)
+json_data <- read_json(path = "data/SAFI.json")
+```
+
+nuevo objeto, "large list" de 131 elementos, pero se ve raro
+porque el parámetro "simplifyVector", que especifica si hay que simplificar o no los vectores, está seteado como FALSE.
+```{r}
+json_data <- read_json(path = "data/SAFI.json", simplifyVector = TRUE)
+glimpse(json_data) # ahora sí!!!
+```
+
+Vemos igual que la variable F_liv tiene una lista de df. 
+Podemos acceder de distintas maneras:
+```{r}
+json_data$F_liv[1]
+
+# elegir una condición
+json_data$F_liv[which(json_data$C06_rooms==4)]
+```
+
