@@ -1,0 +1,100 @@
+---
+title: "Data Wrangling"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+dplyr: paquete para manipular datos tabulares. 
+trabaja directamente con dataframes.
+
+tidyr: cambiar los formatos de datos.
+a veces necesitamos una fila por medida, a veces el tipo de medida necesita su propia columna.
+
+(ambos de tidyverse)
+
+# ¿Qué es un paquete de R?
+
+otros paquetes con distintas funciones. 
+muchos se pueden bajar de cran (Comprehensive R Archive Network) con la función install.packages
+
+# Aprendiendo dplyr y tidyr
+
+vamos a usar la base SAFI
+```{r}
+library(tidyverse)
+library(here)
+
+entrevistas <- read_csv(
+  here("data", "SAFI_clean.csv"),
+  na = "NULL"
+)
+
+# inspeccionamos
+entrevistas
+```
+
+# Seleccionar columnas y filtrar filas
+
+para seleccionar columnas de un df, usamos select()
+primer argumento: dataframe
+siguientes arg: las columnas a mantener
+
+```{r}
+select(entrevistas, village, no_membrs, months_lack_food)
+entrevistas[c("village", "no_membrs", "months_lack_food")] # lo mismo pero subsetteando con funciones de R base
+select(entrevistas, village:respondent_wall_type) # seleccionar rangos
+```
+para seleccionar filas con determinados criterios, usamos filter)
+```{r}
+# primer argumento es el df
+# segundo es la condición
+filter(entrevistas, village == "Chirodzo")
+```
+podemos especificar múltiples condiciones
+combinarlas con "y" o "o"
+en el caso de "y", las filas tienne que cumplir con todas las condiciones, separadas por coma o con &
+
+```{r}
+filter(entrevistas, village == "Chirodzo", rooms > 1, no_meals > 2)
+filter(entrevistas, village == "Chirodzo" & rooms > 1 & no_meals > 2)
+```
+con "o", con una sola alcanza
+```{r}
+filter(entrevistas, village == "Chirodzo" | village == "Ruaca")
+```
+
+# Pipes
+
+si necesitamos ejecutar distintos comandos al mismo tiempo, podemos lograrlo de tres formas distintas:
+
+con pasos intermedios: creamos un df temporal y lo usamos como input para el proximo paso
+```{r}
+entrevistas2 <- filter(entrevistas, village == "Chirodzo")
+entrevistas_ch <- select(entrevistas, village:respondent_wall_type)
+```
+problema: acumulo df que no necesito, muchos nombres con objetos, etc
+
+podemos anidar las funciones:
+```{r}
+filter(entrevistas, village == "Chirodzo") # primero
+select(filter(entrevistas, village == "Chirodzo"),
+                         village:responden_wall_type) # segundo
+entrevistas_ch <- select(filter(entrevistas, village == "Chirodzo"),
+                         village:responden_wall_type) # tercero
+```
+útil pero puede complicar la lectura si son muchas
+siempre va de adentro para afuera
+
+tercera opción: pipes
+te permite tomar el output de una función y enviársela directamente a la próxima función
+se ven así: %>% vienen del paquete magrittr que está en dplyr y los atajos de teclado son: control+shift+m o cmd + shift+ m
+
+```{r}
+entrevistas %>%  #  agarro este df y
+  filter(village == "Chirodzo") %>% # filtro estas filas y
+  select(village:respondent_wall_type) # selecciono estas columnas
+
+# si quiero, puedo guardar este segmento asignándoselo a un objeto
+```
+

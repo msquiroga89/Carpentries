@@ -1,0 +1,117 @@
+---
+title: "3_Starting with data"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+# ¿Qué es un data-frame y un tibble?
+
+Data frame: las estructuras más comunes para los datos tabulaes
+las columnas son vectores que tienen la misma longitud
+similares a una tabla de excel, con la diferencia de que cada columna solo puede ser de un solo tipo
+
+se pueden crear a mano o se pueden importar: read_csv() o read_table()
+
+# Presentación de los datos SAFI
+
+* Studying African Farmer-Led Irrigation (estudio sobre riego dirigido por agricultores) de Tanzania y Mozambique
+* entrevistas entre noviembre 2016 y junio 2017
+* versión limpia de los datos
+* los NA están codificados como "NULL"
+* cada fila contiene las respuestas de un entrevistado
+
+# Importar datos
+
+* vamos a usar la función "read_csv" del paquete readr que es parte del universo tidyverse
+* solo cargamos tidyverse
+* paquete HERE para crear rutas relativas a la carpeta de mayor jerarquia (en este caso, nuestro proyecto rstudio)
+
+```{r}
+library(tidyverse)
+library(here)
+
+entrevistas <- read_csv( # creamos el objeto entrevistas a partir de leer
+  here("data", "SAFI_clean.csv"), # en esta carpeta está este archivo
+  na = "NULL" # le aclaramos cómo encontrar los NA
+)
+```
+Cuestiones importantes
+* los nombres (de carpetas, de archivos) van siempre entre comillas
+* el paquete here puede tomar como argumentos todos los nombres que sean necesarios para encontrar el archivo
+* se pueden usar barras:
+
+```{r}
+entrevistas <- read_csv(
+  here("data/SAFI_clean.csv"),
+  na = "NULL"
+)
+```
+
+Puede pasar que al empezar a escribir lo anterior, aparezca "read.csv"
+* función parecida pero con algunas diferencias
+* cambia los nombres de columnas con espacios y los reemplaza por un punto (interview date pasa a ser interview.date)
+* genera como objeto un dataframe, mientras que read_csv genera un tibble (y en general se prefieren los tibbles)
+
+Correr el código anterior no dio ningún resultado, porque lo guardamos en un objeto
+(aparece en el environment)
+lo podemos llamar
+```{r}
+entrevistas
+```
+Ojo:
+* read_csv da por sentado que los valores están separados por comas
+* si no es el caso (y se usa por ej un ;) se puede usar read_csv2
+* chequeá ?read_csv
+
+Podemos chequear la clase de objeto así:
+```{r}
+class(entrevistas)
+```
+* tipo de dato abreviado debajo del nombre de columna
+
+# Inspeccionando dataframes
+
+```{r}
+# tamaños
+dim(entrevistas) # vector con cantidad de filas y de columnas
+nrow(entrevistas) # cantidad de filas
+ncol(entrevistas) # cantidad de columnas
+
+# contenido
+head(entrevistas) # primeras 6 filas
+tail(entrevistas) # últimas 6 filas
+
+# nombres
+names(entrevistas) # nombres de columnas
+
+# resumen
+str(entrevistas) # estructura del objeto, clase, tamaño y contenido de cada columna
+summary(entrevistas) # estadísticos descriptivos de cada columna
+glimpse(entrevistas) # número de columnas y de gilas, nombre y clase de cada columna y una previsualización (esta función es de dplyr o tibble)
+```
+
+# Indexando y creando subconjuntos a partir de un df
+
+si necesitamos extraer solo algunos conjuntos de datos
+```{r}
+entrevistas[1,1] # primer elemento de la primera columna
+entrevistas[1,6] # primer elemento de la sexta columna
+entrevistas[[1]] # primera columna como vector
+entrevistas[1] # primera columna (como columna)
+entrevistas[1:3, 7] # las primeras tres filas de la columma 7
+# explicar el uso de :
+entrevistas[3,] # la tercera fila de todas las columnas
+
+# también se puede excluir, con -
+entrevistas[,-1] # todo salvo la primera columna
+entrevistas[-c(7:131),] # solo primeras seis filas, todas las columnas
+# equivalente a head(entrevistas)
+
+# se puede crear subconjuntos con tibbles con el nombre de columnas
+entrevistas["village"] # devuelve tibble
+entrevistas[,"village"] # devuelve tibble
+entrevistas[["village"]] # devuelve vector
+entrevistas$village # devuelve vector
+```
+

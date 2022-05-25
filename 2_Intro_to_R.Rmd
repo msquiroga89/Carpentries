@@ -4,6 +4,7 @@ output: html_notebook
 editor_options: 
   chunk_output_type: inline
 ---
+# ¿Qué objetos se pueden usar en R?
 
 Se puede usar R como calculador:
 ```{r}
@@ -33,18 +34,16 @@ area <- base * altura
 base <- 30 # ¿qué pasará con "area"? si no lo vuelvo a correr, nada
 ```
 
-Comentarios: numeral # , command+shift+c para comentar una línea o seleccionar
+# Comentarios: numeral # , command+shift+c para comentar una línea o seleccionar
 
-Ejercicio??
-
-Funciones y argumentos:
+# Funciones y argumentos:
 * códigos predefinidos para usar en secuencias más complejas (permite automatizar)
 * algunas nativas de R, otras definidas por usuario, otras importadas de paquetes
 * tienen argumentos y devuelven valores
 
 Ejemplo: raiz cuadrada
 ```{r}
-sqrt(9549058)
+sqrt(7987985)
 sqrt(area)
 raiz <- sqrt(area) # muchos valores distintos, conjuntos de datos, datasets, etc
 ```
@@ -62,4 +61,97 @@ round(raiz, 2) # orden predefinido, no necesito definir argumentos
 round(digits = 2, raiz) # invierto orden, defino argumentos
 ```
 
-Ejercicio??
+# Vectores y tipos de datos
+
+Vector: compuesto por una serie de valores (números o caracteres)
+concatenamos los valores con "c()"
+ejemplo
+```{r}
+num_impares <- c(1, 3, 5, 7) # números
+num_impares
+
+equipos <- c("almagro", "chacarita", "paternal") #caracteres
+                  # acá lo importante son las comillas, porque si no
+                  # R pensaría que son objetos y los buscaría en el entorno y tiraría un error
+equipos
+```
+
+Para inspeccionar los contenidos de un vector:
+```{r}
+length(equipos) # cantidad de elementos
+typeof(equipos) # tipo de objeto
+str(equipos) # estructura del objeto y de sus elementos
+```
+
+Si necesito seguir agregando elementos:
+```{r}
+equipos <- c(equipos, "comunicaciones")
+equipos <- c("dock_sud", equipos) # explicar orden
+```
+
+Vector atómico: un vector de un solo tipo.
+Tipos: caracter, numérico (o doble), lógico, integral, complejo y raw (crudo?)
+
+Otros tipos de estructuras de datos: listas, matrices, data frames, factores y arrays.
+
+?? Ejercicio
+
+# Creando un subconjunto de vectores
+
+Necesito solo algunos equipos:
+```{r}
+equipos[2] # el segundo
+equipos[c(2, 3)] # segundo y tercero
+```
+
+Puedo repetir los índices para crear un objeto con más elementos:
+```{r}
+mas_equipos <- equipos[c(2,3,2,3,2,3)]
+```
+Ojo: en R los índices empiezan en 1 (no en 0 como en otros lenguajes)
+
+# Subconjuntos condicionales
+
+Podemos seleccionar elementos con un vector lógico:
+```{r}
+pares <- c(2, 4, 6, 8, 10)
+pares[c(TRUE, FALSE, TRUE, TRUE, FALSE)]
+
+# con condiciones
+pares > 4 # cuáles cumplen la condición
+pares[pares > 4] # subconjunto
+
+# múltiples tests
+pares[pares < 8 & pares > 4]
+pares[pares <= 8 & pares >= 4] # explicar símbolos, diferencias entre = y ==
+pares[pares == 8 | pares == 6]
+pares %in% c(2, 6) # para testear si los elementos de la derecha están en el vector definido a la izquierda
+```
+
+# Datos faltantes
+
+se presentan como NA (not-available)
+```{r}
+notas <- c(4, 8, 9, 10, 6, NA)
+mean(notas) # no puede calcular porque hay NA
+max(notas)
+
+# solucion
+mean(notas, na.rm = TRUE)
+max(notas, na.rm = TRUE)
+```
+Podemos subsettear:
+```{r}
+# is.na() con el !
+notas[!is.na(notas)]
+
+# contar NA
+sum(is.na(notas))
+
+# devuelve objeto sin NA
+na.omit(notas)
+
+# extrae aquellos elementos completos
+notas[complete.cases(notas)]
+```
+
