@@ -8,7 +8,6 @@ editor_options:
 JSON: formato de data para permitir que distintas máquinas o o procesos dentro de máquinas se comuniquen enviando mensajes con un formato particular.
 es el formato de data preferido por los API (application programming interfaces)
 es un formato legible por humanos y puede ser mapeado a un df
-el archivo que vamos a usar contiene el resultado de encuestas
 
 ventajas de json: 
 * formato popular, 
@@ -22,6 +21,8 @@ desventajas:
 * difícil de procesar y mostrar
 
 paquete json:
+el archivo que vamos a usar contiene el resultado de encuestas
+
 ```{r}
 library(jsonlite)
 json_data <- read_json(path = "data/SAFI.json")
