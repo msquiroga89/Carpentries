@@ -1,11 +1,21 @@
 ---
 title: "5_Data visualisation"
-output: html_notebook
-editor_options: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
 ```{r}
+library(tidyverse)
+library(here)
+
+entrevistas <- read_csv(
+  here("data", "SAFI_clean.csv"),
+  na = "NULL"
+)
+
 # transformación previa (Dependencias)
 interviews_plotting <- entrevistas %>%
   ## pivot wider by items_owned
@@ -26,14 +36,13 @@ interviews_plotting <- entrevistas %>%
   mutate(number_months_lack_food = rowSums(select(., Jan:May))) %>%
   mutate(number_items = rowSums(select(., bicycle:car)))
 
-write_csv (interviews_plotting, file = "data_output/interviews_plotting.csv")
+write_csv(interviews_plotting, file = "interviews_plotting.csv")
 ```
 
 
 vamos a usar el paquete ggplot2 que está en tidyverse:
 ```{r}
-library(tidyverse)
-interviews_plotting <- read_csv("data_output/interviews_plotting.csv")
+interviews_plotting <- read_csv("interviews_plotting.csv")
 ```
 
 ggplot2 aporta una interfaz para especificar las variables, la forma de presentarlas y las propiedades visuales

@@ -1,7 +1,9 @@
 ---
 title: "Data Wrangling"
-output: html_notebook
-editor_options: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -57,7 +59,7 @@ en el caso de "y", las filas tienne que cumplir con todas las condiciones, separ
 
 ```{r}
 filter(entrevistas, village == "Chirodzo", rooms > 1, no_meals > 2)
-filter(entrevistas, village == "Chirodzo" & rooms > 1 & no_meals > 2)
+filter(entrevistas, village == "Chirodzo" & rooms > 1 & no_meals > 2)
 ```
 con "o", con una sola alcanza
 ```{r}
@@ -79,9 +81,9 @@ podemos anidar las funciones:
 ```{r}
 filter(entrevistas, village == "Chirodzo") # primero
 select(filter(entrevistas, village == "Chirodzo"),
-                         village:responden_wall_type) # segundo
+                         village:respondent_wall_type) # segundo
 entrevistas_ch <- select(filter(entrevistas, village == "Chirodzo"),
-                         village:responden_wall_type) # tercero
+                         village:respondent_wall_type) # tercero
 ```
 útil pero puede complicar la lectura si son muchas
 siempre va de adentro para afuera

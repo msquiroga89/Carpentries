@@ -1,7 +1,9 @@
 ---
 title: "7 Processing JSON data"
-output: html_notebook
-editor_options: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -25,13 +27,14 @@ el archivo que vamos a usar contiene el resultado de encuestas
 
 ```{r}
 library(jsonlite)
-json_data <- read_json(path = "data/SAFI.json")
+library(tidyverse)
+json_data <- read_json(path = "SAFI.json")
 ```
 
 nuevo objeto, "large list" de 131 elementos, pero se ve raro
 porque el parámetro "simplifyVector", que especifica si hay que simplificar o no los vectores, está seteado como FALSE.
 ```{r}
-json_data <- read_json(path = "data/SAFI.json", simplifyVector = TRUE)
+json_data <- read_json(path = "SAFI.json", simplifyVector = TRUE)
 glimpse(json_data) # ahora sí!!!
 ```
 
